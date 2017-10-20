@@ -13,8 +13,8 @@ import (
 const (
 	HTML  = `<!DOCTYPE html><HTML><body><div align="center"> %s </div></body></HTML>`
 	IMAGE = `<img alt="" src="%s" style="vertical-align:bottom"><br/>`
-	HREF2 = `<a href="%s">下一章</a>`
-	HREF1 = `<a href="%s">上一章</a>`
+	HREF2 = `<a href="%s"> 下一章</a>`
+	HREF1 = `<a href="%s">上一章 </a>`
 )
 
 type TEMP struct {
