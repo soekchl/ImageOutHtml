@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 
 	. "github.com/soekchl/myUtils"
 )
@@ -76,6 +77,12 @@ func show() {
 	}
 }
 func createHtml(file_name string) (out_file_str string) {
+	defer func() {
+		if err := recover(); err != nil {
+			Error(file_name, " Err=", err)
+			time.Sleep(time.Second * 3)
+		}
+	}()
 	dir, err := ioutil.ReadDir(file_name)
 	if err != nil {
 		Error(err)
