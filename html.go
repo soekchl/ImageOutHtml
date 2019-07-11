@@ -12,7 +12,7 @@ const htmlHead = `
 		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 		<meta charset="UTF-8">
-		<title>만화</title>
+		<title>%s만화</title>
 		<style type="text/css">
 			* { margin: 0; padding: 0; } .all { position: fixed; /*窗口固定定位*/ right:
 			0px; top: 70%; width: 60px; margin-top: -90px; z-index: 999; } .all ul
