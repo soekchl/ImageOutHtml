@@ -6,13 +6,7 @@ const imgModel = `
 <br/>
 `
 
-const htmlHead = `
-<head>
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-		<meta charset="UTF-8">
-		<title>%s만화</title>
+const htmlStyle = `
 		<style type="text/css">
 			* { margin: 0; padding: 0; } .all { position: fixed; /*窗口固定定位*/ right:
 			0px; top: 70%; width: 60px; margin-top: -90px; z-index: 999; } .all ul
@@ -32,14 +26,20 @@ const htmlHead = `
 			#333, #666); background-image: -ms-linear-gradient(left, #333, #666); }
 			img { width:99%; height:auto; }
 		</style>
-	</head>
 `
 
 // format     preAddress,NextAddress,images
 const htmlModel = `
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+		<meta charset="UTF-8">
+		<title>%s만화</title>
 	%s
+	</head>
 	<body>
 		<div class="all">
 			<ul>

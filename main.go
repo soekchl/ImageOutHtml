@@ -113,7 +113,7 @@ func charToInt(c byte) int {
 }
 
 func outFile(fileName, outFileStr, pre, next string) {
-	outFileStr = fmt.Sprintf(htmlModel, fmt.Sprintf(htmlHead, getTitle()), pre, next, outFileStr)
+	outFileStr = fmt.Sprintf(htmlModel, getTitle(), htmlStyle, pre, next, outFileStr)
 	fi, err := os.Create(fileName)
 	if err != nil {
 		Error(err)
