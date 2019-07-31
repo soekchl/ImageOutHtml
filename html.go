@@ -2,30 +2,14 @@ package main
 
 // format src
 const imgModel = `
-<img src="%s" style="vertical-align:bottom">
+<img data-src="%s" name="%s" style="vertical-align:bottom">
 <br/>
 `
 
 const htmlStyle = `
-		<style type="text/css">
-			* { margin: 0; padding: 0; } .all { position: fixed; /*窗口固定定位*/ right:
-			0px; top: 70%; width: 60px; margin-top: -90px; z-index: 999; } .all ul
-			{ list-style: none; } .all ul li { width: 55px; height: 30px; line-height:
-			30px; position: relative; /*相对*/ z-index: 2; } .all ul li a { position:
-			absolute; /*绝对*/ top: 0px; left: 0px; display: block; color: #FFFFFF; width:
-			60px; height: 30px; line-height: 30px; z-index: 2; text-decoration: none;
-			/*下划线样式*/ -webkit-transition: all 0.6s; -ms-transition: all 0.6s; -moz-transition:
-			all 0.6s; } .all ul li a img { width: 30px; position: absolute; top: 15px;
-			left: 15px; z-index: 2; } li a { background-image: -webkit-linear-gradient(left,
-			#f60, #ffb443); background-image: -moz-linear-gradient(left, #f60, #ffb443);
-			background-image: -ms-linear-gradient(left, #f60, #ffb443); } li.wuyou-contact
-			a { background-image: -webkit-linear-gradient(left, #00b7ee, #55d8ff);
-			background-image: -moz-linear-gradient(left, #00b7ee, #55d8ff); background-image:
-			-ms-linear-gradient(left, #00b7ee, #55d8ff); } li.wuyou-top a { background-image:
-			-webkit-linear-gradient(left, #333, #666); background-image: -moz-linear-gradient(left,
-			#333, #666); background-image: -ms-linear-gradient(left, #333, #666); }
-			img { width:99%; height:auto; }
-		</style>
+ <style type="text/css">
+img { width:100%; height:auto; }
+ </style>
 `
 
 // format     preAddress,NextAddress,images
@@ -41,16 +25,84 @@ const htmlModel = `
 	%s
 	</head>
 	<body>
-		<div class="all">
-			<ul>
-				<li><a href="/">首 页</a></li>
-				<li class="wuyou-contact"><a href="%s">上一章</a></li>
-				<li class="wuyou-top"><a href="%s">下一章</a></li>
-			</ul>
-		</div>
-		<div align="center">
+		<div id="imgList" align="center">
 			%s
 		</div>
 	</body>
+<script>
+  let lastIndex = 0
+  const unit = 8
+  let srcTitle = document.title
+  init()
+
+  window.addEventListener('scroll', function () {
+    let index = getShowImgIndex()
+    let start = index - unit
+    let stop = index + unit
+
+    if (start < 0) {
+      start = 0
+    }
+    if (stop > imgList.children.length) {
+      stop = imgList.children.length
+    }
+
+    // 遍历所有的img标签
+    for (let i = start; i < stop; i += 2) {
+      loadImg(imgList.children[i])
+    }
+    // console.log(start, stop)
+    for (let i = start - 2; i > 0 && setEmptyImg(i); i -= 2) { // 往前清空图片
+    }
+    for (let i = stop + 2; i < imgList.children.length && setEmptyImg(i); i += 2) { // 往后清空图片
+    }
+  })
+
+  function init() {
+    let n = imgList.children.length > 10 ? 10 : imgList.children.length
+    for (let i = 0; i < n; i += 2) {
+      const img = imgList.children[i]
+      loadImg(img);
+    }
+  }
+
+  function getShowImgIndex() {
+    let scrollTop = document.documentElement.scrollTop; // 页面向上滚动的高度
+    let scrollEnd = scrollTop + window.innerHeight; //浏览器自身高度
+    let n = 0
+    let i = lastIndex
+    if (i > unit) {
+      i -= unit
+    } else {
+      i = 0
+    }
+    for (; i < imgList.children.length; i += 2) {
+      const imgTop = imgList.children[i].offsetTop
+      const imgEnd = imgList.children[i].offsetTop + imgList.children[i].height
+      n++
+      if (imgTop < scrollEnd && imgEnd > scrollTop) {
+    	document.title = srcTitle + ' 第'+ imgList.children[i].name +'话'
+        lastIndex = i
+        return i
+      }
+    }
+    return 0
+  }
+
+  // 加载图片
+  function loadImg(img, emptySrc = false) {
+    img.setAttribute('src', img.getAttribute('data-src'))
+  }
+
+  // 设置图片为空
+  function setEmptyImg(index) {
+    const img = imgList.children[index]
+    if (img.getAttribute('src')) {
+      img.setAttribute('src','')
+      return true
+    }
+    return false
+  }
+</script>
 </html>
 `

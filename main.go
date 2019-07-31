@@ -13,7 +13,6 @@ import (
 
 type TEMP struct {
 	imageStr string
-	fileName string
 }
 
 var (
@@ -36,30 +35,17 @@ func main() {
 	for _, v := range dir {
 		if v.IsDir() {
 			allImagesList[getStrInt(v.Name())-i].imageStr = createHtml(v.Name())
-			allImagesList[getStrInt(v.Name())-i].fileName = v.Name() + ".html"
 		}
 	}
 
-	h1 := ""
-	h2 := ""
-
-	for i, v := range allImagesList {
+	imagesStr := ""
+	for _, v := range allImagesList {
 		if len(v.imageStr) < 1 {
 			continue
 		}
-		if i == 0 {
-			h1 = v.fileName
-		} else {
-			h1 = allImagesList[i-1].fileName
-		}
-		if i == len(allImagesList)-1 {
-			h2 = v.fileName
-		} else {
-			h2 = allImagesList[i+1].fileName
-		}
-
-		outFile(v.fileName, v.imageStr, h1, h2)
+		imagesStr += v.imageStr
 	}
+	outFile("comic.html", imagesStr)
 }
 
 func createHtml(fileName string) (outFileStr string) {
@@ -84,7 +70,7 @@ func createHtml(fileName string) (outFileStr string) {
 	}
 
 	for _, v := range dir {
-		images_str[getStrInt(v.Name())-i] = fmt.Sprintf(imgModel, "./"+fileName+"/"+v.Name())
+		images_str[getStrInt(v.Name())-i] = fmt.Sprintf(imgModel, "./"+fileName+"/"+v.Name(), fileName)
 	}
 
 	outFileStr = strings.Join(images_str, "")
@@ -112,8 +98,8 @@ func charToInt(c byte) int {
 	return int(c - 48)
 }
 
-func outFile(fileName, outFileStr, pre, next string) {
-	outFileStr = fmt.Sprintf(htmlModel, getTitle(), htmlStyle, pre, next, outFileStr)
+func outFile(fileName, outFileStr string) {
+	outFileStr = fmt.Sprintf(htmlModel, getTitle(), htmlStyle, outFileStr)
 	fi, err := os.Create(fileName)
 	if err != nil {
 		Error(err)
