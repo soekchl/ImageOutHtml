@@ -30,19 +30,32 @@ const htmlModel = `
 		</div>
 	</body>
 <script>
+  let lastProc = 0
   let lastIndex = 0
-  const unit = 8
+  const unit = 50 * 2
+  let key = false
   let srcTitle = document.title
   init()
 
   window.addEventListener('scroll', function () {
+    if (!key) {
+      key = true
+    } else {
+      return
+    }
     let index = getShowImgIndex()
     let start = index - unit
     let stop = index + unit
 
+    if ( Math.abs(index - lastProc)/2 < unit/10 ) {
+      key = false
+      return
+    }
+
     if (start < 0) {
       start = 0
     }
+
     if (stop > imgList.children.length) {
       stop = imgList.children.length
     }
@@ -56,10 +69,13 @@ const htmlModel = `
     }
     for (let i = stop + 2; i < imgList.children.length && setEmptyImg(i); i += 2) { // 往后清空图片
     }
+    lastProc = index
+    // console.log(lastProc)
+    key = false
   })
 
   function init() {
-    let n = imgList.children.length > 10 ? 10 : imgList.children.length
+    let n = imgList.children.length > unit ? unit : imgList.children.length
     for (let i = 0; i < n; i += 2) {
       const img = imgList.children[i]
       loadImg(img);
@@ -67,7 +83,7 @@ const htmlModel = `
   }
 
   function getShowImgIndex() {
-    let scrollTop = document.documentElement.scrollTop; // 页面向上滚动的高度
+    let scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop; // 页面向上滚动的高度
     let scrollEnd = scrollTop + window.innerHeight; //浏览器自身高度
     let n = 0
     let i = lastIndex
@@ -81,7 +97,7 @@ const htmlModel = `
       const imgEnd = imgList.children[i].offsetTop + imgList.children[i].height
       n++
       if (imgTop < scrollEnd && imgEnd > scrollTop) {
-    	document.title = srcTitle + ' 第'+ imgList.children[i].name +'话'
+        document.title = srcTitle + ' 第' + imgList.children[i].name + '话'
         lastIndex = i
         return i
       }
@@ -91,14 +107,17 @@ const htmlModel = `
 
   // 加载图片
   function loadImg(img, emptySrc = false) {
-    img.setAttribute('src', img.getAttribute('data-src'))
+    if (!img.getAttribute('src')) {
+      img.setAttribute('src', img.getAttribute('data-src'))
+    }
+    // console.log(img.name)
   }
 
   // 设置图片为空
   function setEmptyImg(index) {
     const img = imgList.children[index]
     if (img.getAttribute('src')) {
-      img.setAttribute('src','')
+      img.setAttribute('src', '')
       return true
     }
     return false
